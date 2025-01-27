@@ -3,7 +3,7 @@ version: '3'
 
 # all services
 services:
-# nginx part
+# nginx
     nginx:
       container_name: nginx
       build: requirement/nginx
@@ -17,7 +17,26 @@ services:
       volumes:
         - wordpress_data:/var/www/html/wordpress
       restarts: always
-#mariadb
+
+# wordpress
+    wordpress:
+      container_name: wordpress
+      build: requirement/wordpress
+      image: wordpress:v_final
+      depends_on:
+        - mariadb
+      network:
+        - docker_network
+      volumes:
+        - wordpress_data:/var/www/html/wordpress
+      environment:
+        - MYSQL_DATABASE = ${MYSQL_DATABASE}
+        - MYSQL_USER = ${MYSQL_USER}
+        - MYSQL_PASSWORD = ${MYSQL_PASSWORD}
+        - MYSQL_ROOT_PASSWORD = ${MYSQL_ROOT_PASSWORD}
+      restarts: always
+
+# mariadb
     mariadb:
       container_name: mariadb
       build: requirement/mariadb
@@ -33,3 +52,22 @@ services:
       networks:
         - docker_network
       restarts: always
+
+# network setting
+networks:
+    docker_network:
+
+# volumes setting (data)
+volumes:
+   db_data:
+     driver: local
+     driver_opts:
+        type: none
+        device: /home/donghank/data/mysql
+        o: bind
+   wordpress_data:
+      driver: locak
+      driver_opts:
+        type: none
+        device: /home/donghank/data/wordpress
+        o: bind
