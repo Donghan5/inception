@@ -1,5 +1,5 @@
 # declare version
-version: '3'
+version: '3.8'
 
 # all services
 services:
@@ -10,13 +10,13 @@ services:
       image: nginx:v_final
       depends_on:
         - wordpress
-      networks:
+      network:
         - docker_network
       ports:
         - "443:443"
       volumes:
         - wordpress_data:/var/www/html/wordpress
-      restarts: always
+      restart: always
 
 # wordpress
     wordpress:
@@ -34,7 +34,7 @@ services:
         - MYSQL_USER = ${MYSQL_USER}
         - MYSQL_PASSWORD = ${MYSQL_PASSWORD}
         - MYSQL_ROOT_PASSWORD = ${MYSQL_ROOT_PASSWORD}
-      restarts: always
+      restart: always
 
 # mariadb
     mariadb:
@@ -49,12 +49,12 @@ services:
       volumes:
         - db_data:/var/lib/mysql
       # it allows the access which share same network(docker_network)
-      networks:
+      network:
         - docker_network
-      restarts: always
+      restart: always
 
 # network setting
-networks:
+network:
     docker_network:
 
 # volumes setting (data)
