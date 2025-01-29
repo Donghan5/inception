@@ -10,7 +10,7 @@ services:
       image: nginx:v_final
       depends_on:
         - wordpress
-      network:
+      networks:
         - docker_network
       ports:
         - "443:443"
@@ -25,7 +25,7 @@ services:
       image: wordpress:v_final
       depends_on:
         - mariadb
-      network:
+      networks:
         - docker_network
       volumes:
         - wordpress_data:/var/www/html/wordpress
@@ -49,13 +49,14 @@ services:
       volumes:
         - db_data:/var/lib/mysql
       # it allows the access which share same network(docker_network)
-      network:
+      networks:
         - docker_network
       restart: always
 
 # network setting
-network:
+networks:
     docker_network:
+      driver: bridge
 
 # volumes setting (data)
 volumes:
