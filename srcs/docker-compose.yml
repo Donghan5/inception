@@ -29,11 +29,13 @@ services:
         - docker_network
       volumes:
         - wordpress_data:/var/www/html/wordpress
+      env_file:
+        - .env
       environment:
-        - MYSQL_DATABASE = ${MYSQL_DATABASE}
-        - MYSQL_USER = ${MYSQL_USER}
-        - MYSQL_PASSWORD = ${MYSQL_PASSWORD}
-        - MYSQL_ROOT_PASSWORD = ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       restart: always
 
 # mariadb
@@ -41,11 +43,13 @@ services:
       container_name: mariadb
       build: requirement/mariadb
       image: mariadb:v_final
+      env_file:
+        - .env
       environment:
-        - MYSQL_DATABASE = ${MYSQL_DATABASE}
-        - MYSQL_USER = ${MYSQL_USER}
-        - MYSQL_PASSWORD = ${MYSQL_PASSWORD}
-        - MYSQL_ROOT_PASSWORD = ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       volumes:
         - db_data:/var/lib/mysql
       # it allows the access which share same network(docker_network)
@@ -67,7 +71,7 @@ volumes:
         device: /home/donghank/data/mysql
         o: bind
    wordpress_data:
-      driver: locak
+      driver: local
       driver_opts:
         type: none
         device: /home/donghank/data/wordpress
