@@ -8,7 +8,7 @@ RUN apt-get update && apt-get -y install mariadb-server mariadb-client && rm -rf
 EXPOSE 3306
 
 COPY ./tools/create_db.sh /usr/local/bin
-COPY ./conf/wordpress.sql /usr/local/bin
+# COPY ./conf/wordpress.sql /usr/local/bin
 ENTRYPOINT [ "create_db.sh" ]
 
 CMD [ "mysqld", "--bind-address=0.0.0.0" ]

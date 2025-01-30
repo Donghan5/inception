@@ -2,7 +2,7 @@ FROM debian:buster
 
 # download
 RUN apt-get update && apt-get -y install wget php php-fpm php-sysql curl php-cgi php-pdo \
-php-gd pup-cli php-mbstring && rm -rf /var/lib/apt/lists/*
+php-gd php-cli php-mbstring && rm -rf /var/lib/apt/lists/*
 
 # copy configuration files
 COPY ./conf/www.conf /var/www/html/

@@ -6,7 +6,7 @@ services:
 # nginx
     nginx:
       container_name: nginx
-      build: requirement/nginx
+      build: requirements/nginx
       image: nginx:v_final
       depends_on:
         - wordpress
@@ -21,7 +21,7 @@ services:
 # wordpress
     wordpress:
       container_name: wordpress
-      build: requirement/wordpress
+      build: requirements/wordpress
       image: wordpress:v_final
       depends_on:
         - mariadb
@@ -41,7 +41,7 @@ services:
 # mariadb
     mariadb:
       container_name: mariadb
-      build: requirement/mariadb
+      build: requirements/mariadb
       image: mariadb:v_final
       env_file:
         - .env
