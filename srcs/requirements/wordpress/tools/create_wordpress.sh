@@ -1,3 +1,5 @@
+#!/bin/sh
+
 if [ -f ./wordpress/wp-config.php ]
 then
 	echo "configure file is already exist"
@@ -22,19 +24,5 @@ else
 	mv wp-config-sample.php wp-config.php
 fi
 
-# waiting the mysql
-# echo "Waiting MySQL to start..."
-# until mysqladmin ping -h"$MYSQL_HOSTNAME" --silent; do
-# sleep 2
-# done
-
-# # Ensure of the admin user
-# if ! wp user list --allow-root --path=/var/www/html/wordpress | grep -q "$WP_ADMIN_USER"; then
-# 	echo "Creating Wordpress Admin User..."
-# 	wp user create --allow-root "$WP_ADMIN_USER" "$WP_ADMIN_EMAIL" --role=administrator --user-pass="$WP_ADMIN_PASSWORD" --path=/var/www/html/wordpress
-# 	echo "Admin User created successfully"
-# else
-# 	echo "Admin user already exist"
-# fi
 
 exec "$@"

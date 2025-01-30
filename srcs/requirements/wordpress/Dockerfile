@@ -1,21 +1,14 @@
 FROM debian:buster
 
-# download
-RUN apt-get update && apt-get -y install wget curl bash php php-cgi php-mysql php-fpm php-pdo php-gd php-cli php-mbstring && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && \
+    apt-get install -y mariadb-server
 
-# copy configuration files
-COPY ./conf/www.conf /var/www/html/
+COPY ./tools/script.sh /tmp/script.sh
 
-RUN mkdir /run/php
+RUN  chmod +x /tmp/script.sh
 
-# launch the sh
-COPY ./tools/create_wordpress.sh /usr/local/bin/
-ENTRYPOINT [ "create_wordpress.sh" ]
+RUN sed -i "s/127.0.0.1/0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
 
-WORKDIR /var/www/html
+ENTRYPOINT ["bash", "/tmp/script.sh"]
 
-# using the port 9000
-EXPOSE 9000
-
-# excute php-fpm7.3 in foreground mode
-CMD [ "/usr/sbin/php-fpm7.3", "-F" ]
+CMD ["mysqld_safe"]
