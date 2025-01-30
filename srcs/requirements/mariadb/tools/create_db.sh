@@ -1,5 +1,5 @@
 # initialize mysql
-my_sql_install
+mysql_install_db
 
 # start daemon service
 /etc/init.d/mysql start

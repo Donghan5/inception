@@ -43,6 +43,7 @@ services:
       container_name: mariadb
       build: requirements/mariadb
       image: mariadb:v_final
+      command: /usr/local/bin/create_db.sh
       env_file:
         - .env
       environment:
