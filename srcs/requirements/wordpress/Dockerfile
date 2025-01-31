@@ -27,12 +27,9 @@ RUN chown -R www-data:www-data /var/www/html \
 
 RUN mkdir /run/php
 
-
+WORKDIR /var/www/html/woredpress
 
 ENTRYPOINT [ "/usr/local/bin/create_wordpress.sh" ]
 
-WORKDIR /var/www/html/woredpress
-
 EXPOSE 9000
 
-CMD [ "/usr/sbin/php-fpm7.3", "-F"]
