@@ -14,18 +14,20 @@ php-mbstring \
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 COPY ./tools/create_wordpress.sh /usr/local/bin/
 
-RUN chmod +x /usr/local/bin/create_wordpress.sh
+RUN chmod +x /usr/local/bin/create_wordpress.sh \
+&& chown www-data:www-data /usr/local/bin/create_wordpress.sh
 
 RUN mkdir -p /var/www/html/wordpress \
     && chown -R www-data:www-data /var/www/html/wordpress \
     && chmod -R 755 /var/www/html/wordpress
+
 RUN chown -R www-data:www-data /var/www/html \
 && chmod -R 755 /var/www/html
 
 
 RUN mkdir /run/php
 
-COPY ./tools/create_wordpress.sh /usr/local/bin/
+
 
 ENTRYPOINT [ "/usr/local/bin/create_wordpress.sh" ]
 
