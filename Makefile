@@ -35,7 +35,7 @@ clean:
 	@docker stop $(docker ps -qa) 2>/dev/null || true
 	@docker rm $(docker ps -qa) 2>/dev/null || true
 	@echo "Delete images..."
-	@docker rmi -f $(docker images -qa) 2>dev/null || true
+	@docker rmi -f $(docker images -qa) 2>/dev/null || true
 	@echo "Delete volumes..."
 	@docker volume prune -f
 	@echo "Delete networks..."
