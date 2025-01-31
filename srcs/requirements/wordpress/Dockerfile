@@ -14,6 +14,11 @@ php-mbstring \
 COPY ./conf/www.conf /var/www/html/
 COPY ./tools/wp-config.php /var/www/html/wp-config.php
 
+RUN chown www-data:www-data /var/www/html/wp-config.php \
+&& chmod 644 /var/www/html/wp-config.php
+RUN chown -R www-data:www-data /var/www/html \
+&& chmod -R 755 /var/www/html
+
 RUN mkdir /run/php
 
 COPY ./tools/create_wordpress.sh /usr/local/bin/
