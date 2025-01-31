@@ -2,6 +2,11 @@
 
 cd /var/www/html
 
+if pgrep -x "php-fpm7.3" > /dev/null; then
+    echo "PHP-FPM is already running. Skipping execution."
+    exit 0
+fi
+
 if [ ! -f ./wordpress/wp-config.php ]; then
     echo "Downloading WordPress..."
     wget "https://wordpress.org/latest.tar.gz"
