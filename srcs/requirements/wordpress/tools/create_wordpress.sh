@@ -23,4 +23,4 @@ if [ ! -f ./wordpress/wp-config.php ]; then
 fi
 
 
-exec "$@"
+exec /usr/sbin/php-fpm7.3 -F
