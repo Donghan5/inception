@@ -1,5 +1,3 @@
-COMPOSE_FILE = ./srcs/docker-compose.yml
-
 all: run
 
 # fore-ground
@@ -7,20 +5,20 @@ run:
 	@echo "Run in fore-ground"
 	@sudo mkdir -p /home/donghank/data/wordpress
 	@sudo mkdir -p /home/donghank/data/mysql
-	@docker-compose -f $(COMPOSE_FILE) up
+	@docker-compose -f ./srcs/docker-compose.yml up
 
 # back-ground
 up:
 	@echo "Run in back-ground"
 	@sudo mkdir -p /home/donghank/data/wordpress
 	@sudo mkdir -p /home/donghank/data/mysql
-	@docker-compose -f $(COMPOSE_FILE) up -d
+	@docker-compose -f ./srcs/docker-compose.yml up -d
 
 debug:
 	@echo "Enter to debug mode"
 	@sudo mkdir -p /home/donghank/data/wordpress
 	@sudo mkdir -p /home/donghank/data/mysql
-	@docker-compose -f $(COMPOSE_FILE) --verbose up
+	@docker-compose -f ./srcs/docker-compose.yml --verbose up
 
 list:
 	@echo "List up docker"
@@ -32,16 +30,16 @@ volumes:
 
 clean:
 	@echo "Unmount all services..."
-	@docker-compose -f $(COMPOSE_FILE) down
+	@docker-compose -f ./srcs/docker-compose.yml down
 	@echo "Delete docker container..."
-	@docker stop $(docker ps -qa)
-	@docker rm $(docker ps -qa)
+	@docker stop $(docker ps -qa) 2>/dev/null || true
+	@docker rm $(docker ps -qa) 2>/dev/null || true
 	@echo "Delete images..."
-	@docker rmi -f $(docker images -qa)
+	@docker rmi -f $(docker images -qa) 2>dev/null || true
 	@echo "Delete volumes..."
-	@docker volume rm $(docker volume ls -q)
+	@docker volume prune -f
 	@echo "Delete networks..."
-	@docker network rm $(docker network ls -q)
+	@docker network ls | grep "bridge\|host\|none" -v | awk '{print $1}' | xargs docker network rm 2>/dev/null || true
 	@echo "Delete all data wordpress and mysql..."
 	@sudo rm -rf /home/donghank/data/wordpress
 	@sudo rm -rf /home/donghank/data/mysql

@@ -54,7 +54,6 @@ services:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       volumes:
         - db_data:/var/lib/mysql
-        - ./conf/wordpress.sql:/docker-entrypoint-initdb.d/wordpress.sql
       # it allows the access which share same network(docker_network)
       networks:
         - docker_network
