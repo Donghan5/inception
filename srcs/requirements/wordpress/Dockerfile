@@ -16,11 +16,11 @@ COPY ./conf/www.conf /var/www/html/
 RUN mkdir /run/php
 
 COPY ./tools/create_wordpress.sh /usr/local/bin/
+COPY ./tools/wp-config.php /var/www/html/wp-config.php
 
-ENTRYPOINT [ "create_wordpress.sh" ]
+ENTRYPOINT [ "/usr/local/bin/create_wordpress.sh" ]
 
 WORKDIR /var/www/html/
 
 EXPOSE 9000
-
 CMD [ "/usr/sbin/php-fpm7.3", "-F"]
