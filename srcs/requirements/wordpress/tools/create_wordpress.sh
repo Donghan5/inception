@@ -4,7 +4,7 @@ cd /var/www/html
 
 if [ ! -f ./wordpress/wp-config.php ]; then
     echo "Downloading WordPress..."
-    wget -q "https://wordpress.org/latest.tar.gz"
+    wget "https://wordpress.org/latest.tar.gz"
     tar -xzf latest.tar.gz
     rm -f latest.tar.gz
 
@@ -16,6 +16,8 @@ if [ ! -f ./wordpress/wp-config.php ]; then
     sed -i "s/password_here/$MYSQL_PASSWORD/g" ./wordpress/wp-config.php
     sed -i "s/localhost/$MYSQL_HOSTNAME/g" ./wordpress/wp-config.php
 
+	chown -R www-data:www-data /var/www/html/wordpress
+	chmod -R 755 /var/www/html/wordpress
     chown www-data:www-data ./wordpress/wp-config.php
     chmod 644 ./wordpress/wp-config.php
 fi
