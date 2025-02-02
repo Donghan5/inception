@@ -12,9 +12,6 @@ php-gd php-cli \
 php-mbstring \
 && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /run/php \
-&& chown -R www-data:www-data /run/php \
-&& chmod -R 755 /run/php
 
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 COPY ./tools/create_wordpress.sh /usr/local/bin/
