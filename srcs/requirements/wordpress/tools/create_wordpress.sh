@@ -27,5 +27,6 @@ if [ ! -f ./wordpress/wp-config.php ]; then
     chmod 644 ./wordpress/wp-config.php
 fi
 
+echo "Starting PHP-FPM..."
 
-exec /usr/sbin/php-fpm7.3 -F
+exec "$@"
