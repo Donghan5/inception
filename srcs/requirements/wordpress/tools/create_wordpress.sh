@@ -19,6 +19,11 @@ if [ ! -d "/run/php" ]; then
 	chmod -R 755 /run/php
 fi
 
+if [ -e "/run/php/php7.3-fpm.sock" ]; then
+	echo "Removing old PHP-FPM socket file..."
+	rm -rf /run/php/php7.3-fpm.sock
+fi
+
 if [ ! -f ./wordpress/wp-config.php ]; then
     echo "Downloading WordPress..."
     wget "https://wordpress.org/latest.tar.gz"
@@ -41,4 +46,4 @@ fi
 
 echo "Starting PHP-FPM..."
 
-exec "$@"
+exec /usr/sbin/php-fpm7.3 -F
