@@ -45,8 +45,7 @@ clean:
 	@sudo rm -rf /home/donghank/data/mysql
 	@echo "Delete completed!"
 
-fix_error:
+fix_error: clean
 	@docker system prune -af
-	clean
 
 .PHONY: all run up debug list volumes clean fix_error
