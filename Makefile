@@ -14,12 +14,6 @@ up:
 	@sudo mkdir -p /home/donghank/data/mysql
 	@docker-compose -f ./srcs/docker-compose.yml up -d
 
-# redo:
-# 	@docker-compose down --remove-orphans
-# 	@docker volume prune -f
-# 	@docker-compose build --no-cache
-# 	@docker-compose up -d
-
 debug:
 	@echo "Enter to debug mode"
 	@sudo mkdir -p /home/donghank/data/wordpress
@@ -51,4 +45,8 @@ clean:
 	@sudo rm -rf /home/donghank/data/mysql
 	@echo "Delete completed!"
 
-.PHONY: all run up debug list volumes clean redo
+fix_error:
+	@docker system prune -af
+	clean
+
+.PHONY: all run up debug list volumes clean fix_error
