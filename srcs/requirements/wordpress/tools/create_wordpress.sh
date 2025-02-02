@@ -2,9 +2,14 @@
 
 cd /var/www/html
 
-if pgrep -x "php-fpm7.3" > /dev/null; then
+if netstat -tulpn | grep -q ":9000"; then
     echo "PHP-FPM is already running. Skipping execution."
     exit 0
+fi
+
+if pgrep -x "php-fpm7.3" > dev/null; then
+	echo "PHP-FPM is already running, but force stopping it first..."
+	pkill -9 php-fpm7.3
 fi
 
 if [ ! -d "/run/php" ]; then
