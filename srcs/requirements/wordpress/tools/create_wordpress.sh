@@ -7,6 +7,13 @@ if pgrep -x "php-fpm7.3" > /dev/null; then
     exit 0
 fi
 
+if [ ! -d "/run/php" ]; then
+	echo "Creating /run/php directory..."
+	mkdir -p /run/php
+	chown -R www-data:www-data /run/php
+	chmod -R 755 /run/php
+fi
+
 if [ ! -f ./wordpress/wp-config.php ]; then
     echo "Downloading WordPress..."
     wget "https://wordpress.org/latest.tar.gz"

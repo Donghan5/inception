@@ -16,7 +16,7 @@ services:
         - 443:443
       volumes:
         - wordpress_data:/var/www/html
-      restart: always
+      restart: on-failure
 
 # mariadb
     mariadb:
@@ -30,7 +30,7 @@ services:
       # it allows the access which share same network(docker_network)
       networks:
         - docker_network
-      restart: always
+      restart: on-failure
 
 # wordpress
     wordpress:
@@ -47,7 +47,7 @@ services:
         - wordpress_data:/var/www/html/wordpress
       env_file:
         - .env
-      restart: always
+      restart: on-failure
 # network setting
 networks:
     docker_network:
