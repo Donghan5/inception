@@ -12,4 +12,4 @@ RUN chmod +x /usr/local/bin/mariadb.sh
 
 EXPOSE 3306
 
-ENTRYPOINT [ "mysqld_safe" ]
+ENTRYPOINT [ "/usr/local/bin/mariadb.sh" ]
