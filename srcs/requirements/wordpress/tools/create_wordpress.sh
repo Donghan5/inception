@@ -6,6 +6,7 @@ if [ "$$" -eq 1 ]; then
 	echo "Running as PID 1. Ensuring clean start up..."
 fi
 
+
 if ss -tulpn | grep -q ":9000"; then
     echo "PHP-FPM is already running. Skipping execution."
     exit 0
@@ -17,6 +18,11 @@ if pgrep -x "php-fpm7.3" > /dev/null; then
 	sleep 2
 fi
 
+if [ -e "/run/php/php7.3-fpm.sock" ]; then
+	echo "Removing old PHP-FPM socket file..."
+	rm -rf /run/php/php7.3-fpm.sock
+fi
+
 if [ ! -d "/run/php" ]; then
 	echo "Creating /run/php directory..."
 	mkdir -p /run/php
@@ -24,10 +30,6 @@ if [ ! -d "/run/php" ]; then
 	chmod -R 755 /run/php
 fi
 
-if [ -e "/run/php/php7.3-fpm.sock" ]; then
-	echo "Removing old PHP-FPM socket file..."
-	rm -rf /run/php/php7.3-fpm.sock
-fi
 
 if [ ! -f ./wordpress/wp-config.php ]; then
     echo "Downloading WordPress..."
@@ -51,4 +53,4 @@ fi
 
 echo "Starting PHP-FPM..."
 
-exec /usr/sbin/php-fpm7.3 -F
+exec "$@"

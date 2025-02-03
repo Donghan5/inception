@@ -12,6 +12,8 @@ php-gd php-cli \
 php-mbstring \
 && rm -rf /var/lib/apt/lists/*
 
+RUN sed -i 's/^daemonize = yes/daemonize = no/' etc/php/7.3/fpm/php-fpm.conf \
+&& sed -i '/systemd/d' etc/php/7.3/fpm/pool.d/www.conf
 
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 COPY ./tools/create_wordpress.sh /usr/local/bin/
@@ -34,3 +36,5 @@ WORKDIR /var/www/html/woredpress
 ENTRYPOINT [ "/usr/local/bin/create_wordpress.sh" ]
 
 EXPOSE 9000
+
+CMD [ "/usr/sbin/php-fpm7.3", "-F" ]
