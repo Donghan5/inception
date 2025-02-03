@@ -2,6 +2,10 @@
 
 cd /var/www/html
 
+if [ "$$" -eq 1 ]; then
+	echo "Running as PID 1. Ensuring clean start up..."
+fi
+
 if netstat -tulpn | grep -q ":9000"; then
     echo "PHP-FPM is already running. Skipping execution."
     exit 0
