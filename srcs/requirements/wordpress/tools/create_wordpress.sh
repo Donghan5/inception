@@ -2,6 +2,10 @@
 
 cd /var/www/html
 
+sed -i 's/^daemonize = yes/daemonize = no/' /etc/php/7.3/fpm/php-fpm.conf
+sed -i '/systemd/d' /etc/php/7.3/fpm/pool.d/www.conf
+
+
 if [ "$$" -eq 1 ]; then
 	echo "Running as PID 1. Ensuring clean start up..."
 fi
@@ -53,4 +57,4 @@ fi
 
 echo "Starting PHP-FPM..."
 
-exec "$@"
+exec /usr/sbin/php-fpm7.3 -F
