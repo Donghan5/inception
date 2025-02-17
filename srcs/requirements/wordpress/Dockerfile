@@ -1,39 +1,34 @@
 FROM debian:buster
 
-RUN apt-get update && apt-get -y install \
-wget \
-curl \
-php \
-php-cgi \
-php-mysql \
-php-fpm \
-php-pdo \
-php-gd php-cli \
-php-mbstring \
-iproute2 \
-&& rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y
 
-RUN sed -i 's/^daemonize = yes/daemonize = no/' /etc/php/7.3/fpm/php-fpm.conf \
-&& sed -i '/systemd/d' /etc/php/7.3/fpm/pool.d/www.conf
+RUN apt-get -y install wget
 
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
-COPY ./tools/create_wordpress.sh /usr/local/bin/
+RUN apt-get -y install sendmail
 
-RUN chmod +x /usr/local/bin/create_wordpress.sh \
-&& chown www-data:www-data /usr/local/bin/create_wordpress.sh
+RUN apt-get install -y php7.3\
+		php-fpm\
+		php-mysql\
+		php-pdo\
+		php-cgi\
+		php-gd php-cli\
+		php-mbstring\
+		mariadb-client
 
-RUN mkdir -p /var/www/html/wordpress \
-    && chown -R www-data:www-data /var/www/html/wordpress \
-    && chmod -R 755 /var/www/html/wordpress
+RUN wget https://wordpress.org/wordpress-6.0.tar.gz -P /var/www/html
+RUN cd /var/www/html && tar -xzf wordpress-6.0.tar.gz && rm wordpress-6.0.tar.gz
 
-RUN chown -R www-data:www-data /var/www/html \
-&& chmod -R 755 /var/www/html
+COPY ./conf/php.conf /etc/php/7.3/fpm/pool.d/www.conf
 
-RUN mkdir /run/php
+# RUN chown -R root:root /var/www/html/wordpress
+RUN chown -R www-data:www-data /var/www/html/wordpress
+RUN chmod 755 /var/www/html/wordpress
 
-WORKDIR /var/www/html/woredpress
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
-ENTRYPOINT [ "/usr/local/bin/create_wordpress.sh" ]
+RUN chmod +x wp-cli.phar
+RUN mv wp-cli.phar /usr/local/bin/wp
 
-EXPOSE 9000
+COPY conf/auto_config.sh auto_config.sh
 
+ENTRYPOINT [ "/bin/sh", "auto_config.sh" ]

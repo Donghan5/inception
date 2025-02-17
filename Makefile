@@ -1,51 +1,50 @@
-all: run
+PATH_YML = ./srcs/docker-compose.yml
+RED = "\033[1;31m"
+GREEN = "\033[1;32m"
+YELLOW = "\033[1;33m"
 
-# fore-ground
-run:
-	@echo "Run in fore-ground"
-	@sudo mkdir -p /home/donghank/data/wordpress
-	@sudo mkdir -p /home/donghank/data/mysql
-	@docker-compose -f ./srcs/docker-compose.yml up
+ifneq (,$(wildcard srcs/requirements/tools/data_path.txt))
+	path_file := srcs/requirements/tools/data_path.txt
+	variable := $(shell cat ${path_file})
+	wordpress_path := $(shell echo ${variable}/wordpress)
+	mariadb_path := $(shell echo ${variable}/mariadb)
+endif
 
-# back-ground
-up:
-	@echo "Run in back-ground"
-	@sudo mkdir -p /home/donghank/data/wordpress
-	@sudo mkdir -p /home/donghank/data/mysql
-	@docker-compose -f ./srcs/docker-compose.yml up -d
 
-debug:
-	@echo "Enter to debug mode"
-	@sudo mkdir -p /home/donghank/data/wordpress
-	@sudo mkdir -p /home/donghank/data/mysql
-	@docker-compose -f ./srcs/docker-compose.yml --verbose up
+all:
+ifeq (,$(wildcard ./srcs/requirements/tools/data_path.txt))
+	@bash srcs/requirements/tools/config.sh
+	@echo "Good!"
+	@echo "Use make to launch"
+else
+ifeq (,$(wildcard $(mariadb_path)))
+	@sudo mkdir -p $(mariadb_path)
+	@sudo mkdir -p $(wordpress_path)
+	@sudo chmod 777 $(mariadb_path)
+	@sudo chmod 777 $(wordpress_path)
+endif
+	@echo "Starting Inception..."
+	@sleep 1
+	@sudo docker-compose -f $(PATH_YML) up -d --build
+endif
 
-list:
-	@echo "List up docker"
-	@docker ps -a
+re: clean all
 
-volumes:
-	@echo "Volumes docker"
-	@docker volume list
+stop:
+	@sudo docker-compose -f $(PATH_YML) stop
 
-clean:
-	@echo "Unmount all services..."
-	@docker-compose -f ./srcs/docker-compose.yml down
-	@echo "Delete docker container..."
-	@docker stop $(docker ps -qa) 2>/dev/null || true
-	@docker rm $(docker ps -qa) 2>/dev/null || true
-	@echo "Delete images..."
-	@docker rmi -f $(docker images -qa) 2>/dev/null || true
-	@echo "Delete volumes..."
-	@docker volume prune -f
-	@echo "Delete networks..."
-	@docker network ls | grep "bridge\|host\|none" -v | awk '{print $1}' | xargs docker network rm 2>/dev/null || true
-	@echo "Delete all data wordpress and mysql..."
-	@sudo rm -rf /home/donghank/data/wordpress
-	@sudo rm -rf /home/donghank/data/mysql
-	@echo "Delete completed!"
 
-fix_error: clean
-	@docker system prune -af
+clean: stop
+	@sudo docker-compose -f $(PATH_YML) down -v
 
-.PHONY: all run up debug list volumes clean fix_error
+fclean: clean
+	@sudo rm -rf $(wordpress_path)
+	@sudo rm -rf $(mariadb_path)
+	@sudo docker system prune -af
+
+reset: clean
+	@rm srcs/requirements/tools/data_path.txt
+	@printf "\nPath is reset\n"
+
+config:
+	@bash srcs/requirements/tools/config.sh

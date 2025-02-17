@@ -2,6 +2,7 @@ version: '3'
 
 services:
   mariadb:
+    image: mariadb
     container_name: mariadb
     volumes:
       - mariadb:/var/lib/mysql
@@ -16,6 +17,7 @@ services:
       - "3306"
 
   nginx:
+    image: nginx
     container_name: nginx
     volumes:
       - wordpress:/var/www/wordpress
@@ -32,6 +34,7 @@ services:
     restart: on-failure
 
   wordpress:
+    image: wordpress
     container_name: wordpress
     env_file: .env
     volumes:
@@ -53,14 +56,14 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/donghank/data/wordpress'
+      device: 'pathtodata/wordpress'
 
   mariadb:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/donghank/data/mariadb'
+      device: 'pathtodata/mariadb'
 
 networks:
   inception:

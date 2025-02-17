@@ -1,17 +1,23 @@
-# to take the OS
 FROM debian:buster
 
-# to install nginx openssl and after remove cache file
-RUN apt-get update && apt-get -y install nginx openssl curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y
 
-# create SSL certificate
-RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/ssl/donghank.42.fr.pem -keyout /etc/ssl/donghank.42.fr.key -subj "/C=FR/ST=Paris/L=Paris/O=42 School/OU=donghank/CN=donghank.42.fr"
+RUN apt-get install -y netcat
 
-# copy new configuration to nginx configuration
-COPY ./conf/nginx.conf /etc/nginx/conf.d
+RUN apt install nginx -y
 
-# Open the port (ONLY 443)
-EXPOSE 443
+RUN apt-get install openssl -y
 
-# Excute nginx in foreground, run main process in container
-CMD ["nginx", "-g", "daemon off;"]
+RUN mkdir -p /etc/nginx/ssl
+
+RUN openssl req -newkey rsa:4096 -days 42 -nodes -x509 \
+-subj "/C=FR/ST=IDF/L=Paris/O=42/OU=42/CN=donghank.42.fr/UID=donghank" \
+-out /etc/ssl/certs/inception.crt \
+-keyout /etc/ssl/private/inception.key
+
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+
+RUN chmod 755 /var/www/html
+RUN chown -R www-data:www-data /var/www/html
+
+CMD [ "nginx", "-g", "daemon off;" ]

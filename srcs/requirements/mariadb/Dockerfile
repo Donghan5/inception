@@ -1,15 +1,15 @@
 FROM debian:buster
 
-RUN apt-get update && apt-get -y install mariadb-server mariadb-client && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y
 
-RUN mkdir -p /var/run/mysqld && chown -R mysql:mysql /var/run/mysqld && chmod 777 /var/run/mysqld
+RUN apt-get install mariadb-server -y
 
-COPY ./conf/mysqld.conf /etc/mysql/mariadb.conf.d/
+RUN apt-get install procps -y
 
-COPY ./tools/mariadb.sh /usr/local/bin/
+COPY conf/my.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
-RUN chmod +x /usr/local/bin/mariadb.sh
+COPY conf/auto_config.sh /auto_config.sh
+
+ENTRYPOINT ["/bin/sh", "auto_config.sh"]
 
 EXPOSE 3306
-
-ENTRYPOINT [ "/usr/local/bin/mariadb.sh" ]
